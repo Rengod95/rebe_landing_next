@@ -102,7 +102,7 @@ const PlaceholderImage = ({
 // 섹션 타입 정의
 type SectionConfig = {
 	id: string;
-	ref?: React.RefObject<HTMLDivElement>;
+	ref?: React.RefObject<HTMLDivElement | null>;
 	element?: () => HTMLElement | null;
 };
 
@@ -143,16 +143,12 @@ export default function RebeLandingPageV2() {
 			{
 				id: "ai-showcase",
 				element: () =>
-					document.querySelector(
-						'[data-section="ai-showcase"]',
-					) as HTMLElement | null,
+					document.querySelector('[data-section="ai-showcase"]') as HTMLElement,
 			},
 			{
 				id: "chat-ui",
 				element: () =>
-					document.querySelector(
-						'[data-section="chat-ui"]',
-					) as HTMLElement | null,
+					document.querySelector('[data-section="chat-ui"]') as HTMLElement,
 			},
 			{ id: "problem-solution", ref: problemSolutionRef },
 			{ id: "tech-showcase", ref: techShowcaseRef },
@@ -373,6 +369,7 @@ export default function RebeLandingPageV2() {
 		<StarFilledIcon className="size-10 text-rebe-accent" key="star-icon" />,
 	];
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		let wheelTimeout: NodeJS.Timeout;
 		const touchStartY = 0;
