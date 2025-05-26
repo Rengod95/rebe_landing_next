@@ -1,3 +1,5 @@
+@import url("https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css");
+
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap");
 
 @import "tw-animate-css";
@@ -8,48 +10,163 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+	--animate-marquee: marquee var(--duration) infinite linear;
+	--animate-marquee-vertical: marquee-vertical var(--duration) linear infini;
+
+	/* 폰트 설정 - SUIT Variable 폰트 적용 */
+	--font-sans: "SUIT Variable", "SUIT", "Noto Sans KR", "Inter", system-ui,
+		sans-serif;
+	--font-mono: "SUIT Variable", ui-monospace, SFMono-Regular, "SF Mono", Menlo,
+		Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+	/* Border Radius */
+	--radius-sm: calc(1.25rem - 4px);
+	--radius-DEFAULT: 1.5rem;
+	--radius-md: calc(2rem - 2px);
+	--radius-lg: 2.25rem;
+	--radius-xl: calc(3rem + 4px);
+
+	/* REBE 확장 색상 팔레트 */
+	/* Primary Purple 계열 */
+	--color-rebe-purple-50: #f8f7ff;
+	--color-rebe-purple-100: #f1edff;
+	--color-rebe-purple-200: #e8eeff;
+	--color-rebe-purple-300: #dcd7ff;
+	--color-rebe-purple-400: #e4e0ff;
+	--color-rebe-purple-500: #c4b5fd;
+	--color-rebe-purple-600: #a78bfa;
+	--color-rebe-purple-700: #8b5cf6;
+	--color-rebe-purple-800: #7c3aed;
+	--color-rebe-purple-900: #494791;
+
+	/* Accent Blue 계열 */
+	--color-rebe-blue-50: #f0f9ff;
+	--color-rebe-blue-100: #e0f2fe;
+	--color-rebe-blue-200: #bae6fd;
+	--color-rebe-blue-300: #7dd3fc;
+	--color-rebe-blue-400: #38bdf8;
+	--color-rebe-blue-500: #0ea5e9;
+	--color-rebe-blue-600: #0284c7;
+	--color-rebe-blue-700: #0369a1;
+	--color-rebe-blue-800: #075985;
+	--color-rebe-blue-900: #0c4a6e;
+
+	/* Accent Pink 계열 */
+	--color-rebe-pink-50: #fdf2f8;
+	--color-rebe-pink-100: #fce7f3;
+	--color-rebe-pink-200: #fbcfe8;
+	--color-rebe-pink-300: #f9a8d4;
+	--color-rebe-pink-400: #f472b6;
+	--color-rebe-pink-500: #ec4899;
+	--color-rebe-pink-600: #db2777;
+	--color-rebe-pink-700: #be185d;
+	--color-rebe-pink-800: #9d174d;
+	--color-rebe-pink-900: #831843;
+
+	/* Purple-tinted Gray 계열 (백그라운드용) */
+	--color-rebe-slate-50: #fbfbfc;
+	--color-rebe-slate-100: #f7f7f9;
+	--color-rebe-slate-200: #f0f0f3;
+	--color-rebe-slate-300: #e6e6ea;
+	--color-rebe-slate-400: #c7c7cd;
+	--color-rebe-slate-500: #a1a1a9;
+	--color-rebe-slate-600: #6c6c75;
+	--color-rebe-slate-700: #4a4a52;
+	--color-rebe-slate-800: #2e2e35;
+	--color-rebe-slate-900: #1a1a1f;
+
+	/* Neutral 계열 */
+	--color-rebe-gray-50: #fafafa;
+	--color-rebe-gray-100: #f5f5f5;
+	--color-rebe-gray-200: #e5e5e5;
+	--color-rebe-gray-300: #d4d4d4;
+	--color-rebe-gray-400: #a3a3a3;
+	--color-rebe-gray-500: #737373;
+	--color-rebe-gray-600: #525252;
+	--color-rebe-gray-700: #404040;
+	--color-rebe-gray-800: #262626;
+	--color-rebe-gray-900: #171717;
+
+	/* Success/Error 계열 */
+	--color-rebe-green-50: #f0fdf4;
+	--color-rebe-green-100: #dcfce7;
+	--color-rebe-green-500: #22c55e;
+	--color-rebe-green-600: #16a34a;
+	--color-rebe-green-700: #15803d;
+
+	--color-rebe-red-50: #fef2f2;
+	--color-rebe-red-100: #fee2e2;
+	--color-rebe-red-500: #ef4444;
+	--color-rebe-red-600: #dc2626;
+	--color-rebe-red-700: #b91c1c;
+
+	/* 기존 호환성을 위한 별칭 */
+	--color-rebe-accent: var(--color-rebe-purple-400);
+	--color-rebe-accent-70: rgb(220 215 255 / 0.7);
+	--color-rebe-white: #fefefe;
+	--color-rebe-text: var(--color-rebe-purple-900);
+	--color-rebe-gradient-start: var(--color-rebe-purple-200);
+	--color-rebe-gradient-middle: var(--color-rebe-purple-50);
+	--color-rebe-gradient-end: var(--color-rebe-purple-100);
+
+	/* 애니메이션 */
+	--animate-shimmer-slide: shimmer-slide var(--speed) ease-in-out infinite
+		alternate;
+	--animate-spin-around: spin-around calc(var(--speed) * 2) infinite linear;
+	--animate-border-beam: border-beam calc(var(--duration) * 1s) infinite linear;
+	--animate-fade-in: fade-in 0.5s ease-in-out;
+	--animate-slide-up: slide-up 0.5s ease-out;
+	--animate-scale-in: scale-in 0.3s ease-out;
+	--animate-marquee: marquee var(--duration) infinite linear;
+	--animate-marquee-vertical: marquee-vertical var(--duration) infinite linear;
+	--animate-meteor: meteor 5s linear infinite;
+	--animate-aurora: aurora 20s linear infinite;
+
+	/* 기존 shadcn/ui 색상들 */
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
-	--font-sans: "Noto Sans KR", var(--font-geist-sans);
-	--font-mono: var(--font-geist-mono);
-
-	--font-display: "Inter", "sans-serif";
-	--color-primary-500: oklch(0.84 0.18 117.33);
-	--spacing: 0.25rem;
-	--color-sidebar-ring: var(--sidebar-ring);
-	--color-sidebar-border: var(--sidebar-border);
-	--color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-	--color-sidebar-accent: var(--sidebar-accent);
-	--color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-	--color-sidebar-primary: var(--sidebar-primary);
-	--color-sidebar-foreground: var(--sidebar-foreground);
-	--color-sidebar: var(--sidebar);
-	--color-chart-5: var(--chart-5);
-	--color-chart-4: var(--chart-4);
-	--color-chart-3: var(--chart-3);
-	--color-chart-2: var(--chart-2);
-	--color-chart-1: var(--chart-1);
-	--color-ring: var(--ring);
-	--color-input: var(--input);
-	--color-border: var(--border);
-	--color-destructive: var(--destructive);
-	--color-accent-foreground: var(--accent-foreground);
-	--color-accent: var(--accent);
-	--color-muted-foreground: var(--muted-foreground);
-	--color-muted: var(--muted);
-	--color-secondary-foreground: var(--secondary-foreground);
-	--color-secondary: var(--secondary);
-	--color-primary-foreground: var(--primary-foreground);
-	--color-primary: var(--primary);
-	--color-popover-foreground: var(--popover-foreground);
-	--color-popover: var(--popover);
-	--color-card-foreground: var(--card-foreground);
 	--color-card: var(--card);
+	--color-card-foreground: var(--card-foreground);
+	--color-popover: var(--popover);
+	--color-popover-foreground: var(--popover-foreground);
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-secondary: var(--secondary);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-accent: var(--accent);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-destructive: var(--destructive);
+	--color-border: var(--border);
+	--color-input: var(--input);
+	--color-ring: var(--ring);
 
-	--radius-sm: calc(var(--radius) - 4px);
-	--radius-md: calc(var(--radius) - 2px);
-	--radius-lg: var(--radius);
-	--radius-xl: calc(var(--radius) + 4px);
+	/* 기타 시스템 색상들 */
+	--color-sidebar: var(--sidebar);
+	--color-sidebar-foreground: var(--sidebar-foreground);
+	--color-sidebar-primary: var(--sidebar-primary);
+	--color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+	--color-sidebar-accent: var(--sidebar-accent);
+	--color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+	--color-sidebar-border: var(--sidebar-border);
+	--color-sidebar-ring: var(--sidebar-ring);
+	--color-chart-1: var(--chart-1);
+	--color-chart-2: var(--chart-2);
+	--color-chart-3: var(--chart-3);
+	--color-chart-4: var(--chart-4);
+	--color-chart-5: var(--chart-5);
+
+	/* 간격 설정 */
+	--spacing: 0.25rem;
+
+	--animate-marquee: marquee var(--duration) infinite linear;
+	--animate-marquee-vertical: marquee-vertical var(--duration) linear infini;
+
+	/* 추가 색상 */
+	--color-rebe-green-400: #4ade80;
+	--color-rebe-yellow-400: #facc15;
+	--color-rebe-slate-900: #0f172a;
 }
 
 :root {
@@ -95,6 +212,208 @@
 	--ring: oklch(0.82 0.07 282 / 0.3);
 }
 
+/* 키프레임 애니메이션 정의 */
+@keyframes shimmer-slide {
+	to {
+		transform: translate(calc(100cqw - 100%), 0);
+	}
+}
+
+@keyframes spin-around {
+	0% {
+		transform: translateZ(0) rotate(0);
+	}
+	15%,
+	35% {
+		transform: translateZ(0) rotate(90deg);
+	}
+	65%,
+	85% {
+		transform: translateZ(0) rotate(270deg);
+	}
+	100% {
+		transform: translateZ(0) rotate(360deg);
+	}
+}
+
+@keyframes border-beam {
+	100% {
+		offset-distance: 100%;
+	}
+}
+
+@keyframes fade-in {
+	0% {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes slide-up {
+	0% {
+		opacity: 0;
+		transform: translateY(30px);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes scale-in {
+	0% {
+		opacity: 0;
+		transform: scale(0.9);
+	}
+	100% {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+@keyframes marquee {
+	from {
+		transform: translateX(0%);
+	}
+	to {
+		transform: translateX(-100%);
+	}
+}
+
+@keyframes marquee-vertical {
+	from {
+		transform: translateY(0%);
+	}
+	to {
+		transform: translateY(-100%);
+	}
+}
+
+@keyframes meteor {
+	0% {
+		transform: rotate(215deg) translateX(0);
+		opacity: 1;
+	}
+	70% {
+		opacity: 1;
+	}
+	100% {
+		transform: rotate(215deg) translateX(-500px);
+		opacity: 0;
+	}
+}
+
+@keyframes aurora {
+	0% {
+		background-position: 0% 50%;
+		transform: rotate(-5deg) scale(0.9);
+	}
+	25% {
+		background-position: 50% 100%;
+		transform: rotate(5deg) scale(1.1);
+	}
+	50% {
+		background-position: 100% 50%;
+		transform: rotate(-3deg) scale(0.95);
+	}
+	75% {
+		background-position: 50% 0%;
+		transform: rotate(3deg) scale(1.05);
+	}
+	100% {
+		background-position: 0% 50%;
+		transform: rotate(-5deg) scale(0.9);
+	}
+}
+
+@keyframes marquee {
+	from {
+		transform: translateX(0);
+	}
+	to {
+		transform: translateX(calc(-100% - var(--gap)));
+	}
+}
+@keyframes marquee-vertical {
+	from {
+		transform: translateY(0);
+	}
+	to {
+		transform: translateY(calc(-100% - var(--gap)));
+	}
+}
+
+/* 배경 이미지/그라데이션을 위한 유틸리티 클래스 */
+.bg-rebe-gradient {
+	background: linear-gradient(
+		135deg,
+		var(--color-rebe-gradient-start) 0%,
+		var(--color-rebe-gradient-middle) 50%,
+		var(--color-rebe-gradient-end) 100%
+	);
+}
+
+.bg-rebe-gradient-vertical {
+	background: linear-gradient(
+		180deg,
+		var(--color-rebe-gradient-start) 0%,
+		var(--color-rebe-gradient-middle) 50%,
+		var(--color-rebe-gradient-end) 100%
+	);
+}
+
+.bg-rebe-gradient-blue {
+	background: linear-gradient(
+		135deg,
+		var(--color-rebe-blue-100) 0%,
+		var(--color-rebe-blue-50) 50%,
+		var(--color-rebe-purple-100) 100%
+	);
+}
+
+.bg-rebe-gradient-pink {
+	background: linear-gradient(
+		135deg,
+		var(--color-rebe-pink-100) 0%,
+		var(--color-rebe-pink-50) 50%,
+		var(--color-rebe-purple-100) 100%
+	);
+}
+
+.bg-rebe-gradient-rainbow {
+	background: linear-gradient(
+		135deg,
+		var(--color-rebe-blue-200) 0%,
+		var(--color-rebe-purple-300) 25%,
+		var(--color-rebe-pink-200) 50%,
+		var(--color-rebe-purple-200) 75%,
+		var(--color-rebe-blue-100) 100%
+	);
+}
+
+/* Purple-tinted slate 그라데이션 */
+.bg-rebe-gradient-slate {
+	background: linear-gradient(
+		135deg,
+		var(--color-rebe-slate-50) 0%,
+		var(--color-rebe-slate-100) 50%,
+		var(--color-rebe-purple-50) 100%
+	);
+}
+
+.bg-rebe-gradient-slate-vertical {
+	background: linear-gradient(
+		180deg,
+		var(--color-rebe-slate-50) 0%,
+		var(--color-rebe-slate-100) 50%,
+		var(--color-rebe-purple-50) 100%
+	);
+}
+
 @layer base {
 	* {
 		@apply border-border outline-ring/50;
@@ -102,4 +421,29 @@
 	body {
 		@apply bg-background text-foreground font-sans;
 	}
+}
+
+/* 부드러운 스크롤 비활성화 (JavaScript로 제어) */
+html {
+	scroll-behavior: auto;
+}
+
+/* 스크롤바 숨기기 (선택사항) */
+body {
+	overflow-x: hidden;
+}
+
+/* 스크롤 진행 인디케이터 스타일 */
+.scroll-indicator {
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scroll-indicator:hover {
+	transform: scale(1.2);
+}
+
+/* 스크롤 중일 때 선택 방지 */
+.scrolling {
+	user-select: none;
+	pointer-events: none;
 }

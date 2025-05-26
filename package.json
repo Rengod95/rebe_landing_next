@@ -20,6 +20,7 @@
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0",
 		"react-tweet": "^3.2.2",
+		"simplex-noise": "^4.0.1",
 		"tailwind-merge": "^3.3.0"
 	},
 	"overrides": {
@@ -29,6 +30,7 @@
 		}
 	},
 	"devDependencies": {
+		"@svgr/webpack": "^8.1.0",
 		"@tailwindcss/postcss": "^4.1.7",
 		"@types/node": "^20",
 		"@types/react": "^19",

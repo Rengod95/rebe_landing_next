@@ -1,68 +1,94 @@
-import { cn } from "@/lib/utils";
-import type React from "react";
+"use client";
 
-export interface BorderBeamProps {
-	className?: string;
+import { cn } from "@/lib/utils";
+import { motion, MotionStyle, Transition } from "motion/react";
+
+interface BorderBeamProps {
+	/**
+	 * The size of the border beam.
+	 */
 	size?: number;
+	/**
+	 * The duration of the border beam.
+	 */
 	duration?: number;
-	borderWidth?: number;
-	colorFrom?: string;
-	colorTo?: string;
+	/**
+	 * The delay of the border beam.
+	 */
 	delay?: number;
-	children?: React.ReactNode;
+	/**
+	 * The color of the border beam from.
+	 */
+	colorFrom?: string;
+	/**
+	 * The color of the border beam to.
+	 */
+	colorTo?: string;
+	/**
+	 * The motion transition of the border beam.
+	 */
+	transition?: Transition;
+	/**
+	 * The class name of the border beam.
+	 */
+	className?: string;
+	/**
+	 * The style of the border beam.
+	 */
+	style?: React.CSSProperties;
+	/**
+	 * Whether to reverse the animation direction.
+	 */
+	reverse?: boolean;
+	/**
+	 * The initial offset position (0-100).
+	 */
+	initialOffset?: number;
 }
 
-export const BorderBeam: React.FC<BorderBeamProps> = ({
+export const BorderBeam = ({
 	className,
-	size = 200,
-	duration = 15,
-	borderWidth = 1.5,
+	size = 50,
+	delay = 0,
+	duration = 6,
 	colorFrom = "#ffaa40",
 	colorTo = "#9c40ff",
-	delay = 0,
-	children,
-}) => {
+	transition,
+	style,
+	reverse = false,
+	initialOffset = 0,
+}: BorderBeamProps) => {
 	return (
-		<div
-			style={
-				{
-					"--size": size,
-					"--duration": duration,
-					"--delay": delay,
-				} as React.CSSProperties
-			}
-			className={cn(
-				"relative flex items-center justify-center rounded-[16px] bg-slate-950 p-3 text-sm antialiased",
-				className,
-			)}
-		>
-			<div
-				className="absolute inset-[0] rounded-[16px] [border:calc(var(--border-width)*1px)_solid_transparent]"
+		<div className="pointer-events-none absolute inset-0 rounded-[inherit] border border-transparent [mask-clip:padding-box,border-box] [mask-composite:intersect] [mask-image:linear-gradient(transparent,transparent),linear-gradient(#000,#000)]">
+			<motion.div
+				className={cn(
+					"absolute aspect-square",
+					"bg-gradient-to-l from-[var(--color-from)] via-[var(--color-to)] to-transparent",
+					className,
+				)}
 				style={
 					{
+						width: size,
+						offsetPath: `rect(0 auto auto 0 round ${size}px)`,
 						"--color-from": colorFrom,
 						"--color-to": colorTo,
-						"--border-width": borderWidth,
-						"--radius": "16px",
-						"--delay": `-${delay}s`,
-						"--angle": "0deg",
-						background:
-							"radial-gradient(transparent,transparent), conic-gradient(from var(--angle) at 50% 50%, var(--color-from) 0%, var(--color-to) 15%, var(--color-from) 35%,transparent 50%) 0% 0% / var(--size)px var(--size)px repeat, conic-gradient(from var(--angle) at 50% 50%, var(--color-from) 0%, var(--color-to) 15%, var(--color-from) 35%,transparent 50%) 50% 50% / var(--size)px var(--size)px repeat",
-						WebkitAnimation:
-							"border-beam calc(var(--duration)*1s) calc(var(--delay)*1s) infinite linear",
-						animation:
-							"border-beam calc(var(--duration)*1s) calc(var(--delay)*1s) infinite linear",
-						backgroundSize:
-							"var(--size)px var(--size)px, var(--size)px var(--size)px, var(--size)px var(--size)px, var(--size)px var(--size)px",
-						mask: "linear-gradient(transparent,transparent), linear-gradient(transparent,transparent)",
-						WebkitMask:
-							"linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-						maskComposite: "intersect",
-						WebkitMaskComposite: "destination-out",
-					} as React.CSSProperties
+						...style,
+					} as MotionStyle
 				}
+				initial={{ offsetDistance: `${initialOffset}%` }}
+				animate={{
+					offsetDistance: reverse
+						? [`${100 - initialOffset}%`, `${-initialOffset}%`]
+						: [`${initialOffset}%`, `${100 + initialOffset}%`],
+				}}
+				transition={{
+					repeat: Number.POSITIVE_INFINITY,
+					ease: "linear",
+					duration,
+					delay: -delay,
+					...transition,
+				}}
 			/>
-			{children}
 		</div>
 	);
 };

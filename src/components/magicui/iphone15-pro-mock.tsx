@@ -1,16 +1,17 @@
+"use client";
 import type { SVGProps } from "react";
 
 export interface Iphone15ProProps extends SVGProps<SVGSVGElement> {
-	width?: number;
-	height?: number;
+	width?: number | string;
+	height?: number | string;
 	src?: string;
 	videoSrc?: string;
 	title?: string; // Add title prop for accessibility
 }
 
 export default function Iphone15Pro({
-	width = 433,
-	height = 882,
+	width = "100%",
+	height = "100%",
 	src,
 	videoSrc,
 	title = "iPhone 15 Pro mockup", // Default title
@@ -20,7 +21,7 @@ export default function Iphone15Pro({
 		<svg
 			width={width}
 			height={height}
-			viewBox={`0 0 ${width} ${height}`}
+			viewBox="0 0 433 882"
 			fill="none"
 			xmlns="http://www.w3.org/2000/svg"
 			role="img" // Add role for accessibility
@@ -66,23 +67,11 @@ export default function Iphone15Pro({
 					href={src}
 					x="21.25"
 					y="19.25"
-					width="389.5"
-					height="843.5"
+					width="100%"
+					height="100%"
 					preserveAspectRatio="xMidYMid slice"
 					clipPath="url(#roundedCorners)"
 				/>
-			)}
-			{videoSrc && (
-				<foreignObject x="21.25" y="19.25" width="389.5" height="843.5">
-					<video
-						className="size-full overflow-hidden rounded-[55.75px] object-cover"
-						src={videoSrc}
-						autoPlay
-						loop
-						muted
-						playsInline
-					/>
-				</foreignObject>
 			)}
 			<path
 				d="M154 48.5C154 38.2827 162.283 30 172.5 30H259.5C269.717 30 278 38.2827 278 48.5C278 58.7173 269.717 67 259.5 67H172.5C162.283 67 154 58.7173 154 48.5Z"
