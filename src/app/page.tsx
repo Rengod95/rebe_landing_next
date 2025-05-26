@@ -3,35 +3,14 @@
 import { useRef, useEffect, useState, useCallback, useMemo } from "react";
 import { TextAnimate } from "@/components/magicui/text-animate";
 import { NumberTicker } from "@/components/magicui/number-ticker";
-import { ShimmerButton } from "@/components/magicui/shimmer-button";
-import { AnimatedBeam } from "@/components/magicui/animated-beam";
 import { Globe } from "@/components/magicui/globe";
 import { AnimatedCircularProgressBar } from "@/components/magicui/animated-circular-progress-bar";
-import { AvatarCircles } from "@/components/magicui/avatar-circles";
-import { BentoCard, BentoGrid } from "@/components/magicui/bento-grid";
 import { BlurFade } from "@/components/magicui/blur-fade";
-import { BorderBeam } from "@/components/magicui/border-beam";
-import { Dock, DockIcon } from "@/components/magicui/dock";
-import { FlickeringGrid } from "@/components/magicui/flickering-grid";
-import { IconCloud } from "@/components/magicui/icon-cloud";
-import { MagicCard } from "@/components/magicui/magic-card";
 import { Marquee } from "@/components/magicui/marquee";
-import { Meteors } from "@/components/magicui/meteors";
-import { Particles } from "@/components/magicui/particles";
-import { RippleButton } from "@/components/magicui/ripple-button";
-import { Safari } from "@/components/magicui/safari-mock";
 import { ShinyButton } from "@/components/magicui/shiny-button";
-import { ClientTweetCard } from "@/components/magicui/client-tweet-card";
-import Iphone15Pro from "@/components/magicui/iphone15-pro-mock";
-import Android from "@/components/magicui/android-mock";
 import {
-	ArrowRightIcon,
-	CalendarIcon,
 	CodeIcon as RadixCodeIcon,
 	ComponentInstanceIcon,
-	DownloadIcon,
-	EyeOpenIcon,
-	GitHubLogoIcon,
 	GlobeIcon as RadixGlobeIcon,
 	HeartIcon,
 	InfoCircledIcon,
@@ -40,16 +19,9 @@ import {
 	Link2Icon,
 	LinkedInLogoIcon,
 	LockClosedIcon,
-	MoonIcon,
-	Pencil1Icon,
-	PersonIcon,
-	PieChartIcon,
-	PlusIcon,
 	RocketIcon as RadixRocketIcon,
 	Share1Icon,
 	StarFilledIcon,
-	SunIcon,
-	TableIcon,
 	TargetIcon,
 	TwitterLogoIcon,
 	UploadIcon,
