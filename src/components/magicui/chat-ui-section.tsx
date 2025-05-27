@@ -70,7 +70,7 @@ export function ChatUISection() {
 
 	return (
 		<section
-			className="h-screen relative pb-6 pt-24 lg:pt-24 lg:pb-12 xl:py-36 overflow-hidden flex flex-col justify-center items-center"
+			className="h-screen relative overflow-hidden flex flex-col justify-center items-center pb-16 md:pb-24"
 			data-section="chat-ui"
 		>
 			{/* 배경 패턴 */}
@@ -79,16 +79,16 @@ export function ChatUISection() {
 				<div className="absolute bottom-1/4 right-1/6 w-144 h-168 bg-gradient-to-br from-rebe-blue-400/70 to-rebe-purple-400 rounded-full blur-2xl" />
 			</div>
 
-			<div className="container flex-1 mx-auto px-4 md:px-8 relative z-10">
+			<div className="w-full mx-auto px-4 md:px-8 relative z-10 items-center justify-center">
 				{/* 섹션 헤더 */}
-				<div className=" text-center mb-6 lg:mb-6 xl:mb-12">
+				<div className="w-full text-center mb-12">
 					<BlurFade delay={0.1} inView>
 						<TextAnimate
 							as="h3"
 							animation="slideUp"
 							by="word"
 							duration={0.7}
-							className="mb-12 md:mb-8 xl:mb-16 font-normal tracking-tight leading-normal text-rebe-slate-800 text-4xl lg:text-6xl"
+							className="mb-12 md:mb-8 xl:mb-16 font-light tracking-tight leading-normal text-rebe-slate-800 text-4xl lg:text-6xl"
 						>
 							REBE에 대해 더 알아보세요
 						</TextAnimate>
@@ -99,7 +99,7 @@ export function ChatUISection() {
 				<div className="flex flex-1 flex-row justify-center max-w-4xl mx-auto ">
 					<div className="md:px-8  max-w-2xl ">
 						{/* 채팅 메시지들 */}
-						<div className="space-y-3 md:space-y-4 lg:space-y-6">
+						<div className="space-y-6 md:space-y-8 lg:space-y-12">
 							{chatData.map((message) => (
 								<BlurFade
 									key={message.id}
@@ -114,14 +114,14 @@ export function ChatUISection() {
 								>
 									<div
 										className={cn(
-											"max-w-[80%] rounded-3xl px-3 py-2 md:px-6 md:py-4 shadow-2xl shadow-rebe-slate-300",
+											"max-w-[80%] rounded-2xl px-4 py-3 md:px-6 md:py-4 shadow-2xl shadow-rebe-slate-300",
 											message.type === "question"
 												? " text-rebe-slate-800 bg-rebe-slate-50 ml-auto"
 												: "bg-rebe-slate-900 border border-rebe-slate-300 text-rebe-slate-800 mr-auto",
 										)}
 									>
 										{message.type === "answer" && (
-											<div className="flex items-center gap-2 mb-2">
+											<div className="hidden md:flex items-center gap-2 mb-2">
 												<div className="w-4 h-4 md:w-6 md:h-6 lg:w-8 lg:h-8 bg-gradient-to-br from-rebe-blue-400 to-rebe-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
 													R
 												</div>

@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { BlurFade } from "./blur-fade";
 import Iphone15Pro from "./iphone15-pro-mock";
 import { motion } from "motion/react";
-import { useInView } from "framer-motion";
 import { TextAnimate } from "@/components/magicui/text-animate";
+import { useStepScrollControl } from "@/hooks/useStepScrollControl";
 
 interface AIStep {
 	id: number;
@@ -96,7 +96,7 @@ const aiSteps: AIStep[] = [
 
 interface AIShowcaseSectionProps {
 	onStepChange?: (currentStep: number, isLastStep: boolean) => void;
-	onSectionExit?: () => void;
+	onSectionExit?: (currentStep: number) => void;
 }
 
 // 스크린 사이즈 훅
@@ -173,274 +173,180 @@ export function AIShowcaseSection({
 	onStepChange,
 	onSectionExit,
 }: AIShowcaseSectionProps) {
-	const sectionRef = useRef<HTMLDivElement>(null);
-	const isInView = useInView(sectionRef, {
-		margin: "-20% 0px -20% 0px",
-		amount: 0.3,
-	});
-
-	const [currentStep, setCurrentStep] = useState(0);
-	const [phoneAnimationComplete, setPhoneAnimationComplete] = useState(false);
-	const [isScrolling, setIsScrolling] = useState(false);
-
-	// 스크린 사이즈 훅 사용
 	const { width: screenWidth, height: screenHeight } = useScreenSize();
 
-	// iPhone 사이즈 계산
-	const iphoneSize = calculateIphoneSize(screenWidth, screenHeight);
-
-	// 스크롤 핸들러 수정
-	const handleScroll = useCallback(
-		(e: WheelEvent) => {
-			// 섹션이 뷰에 있지 않으면 처리하지 않음
-			if (!isInView || isScrolling) {
-				return;
-			}
-
-			e.preventDefault();
-			e.stopPropagation();
-
-			const direction = e.deltaY > 0 ? "down" : "up";
-
-			setIsScrolling(true);
-
-			if (direction === "down") {
-				if (currentStep < aiSteps.length - 1) {
-					// 다음 스텝으로
-					const nextStep = currentStep + 1;
-					setCurrentStep(nextStep);
-					onStepChange?.(nextStep, nextStep === aiSteps.length - 1);
-				} else {
-					// 마지막 스텝에서 아래로 스크롤하면 섹션 종료
-					onSectionExit?.();
-					// 일반 스크롤로 복귀하기 위해 약간의 지연 후 다음 섹션으로 스크롤
-					setTimeout(() => {
-						const nextSection = document.querySelector(
-							'[data-section="chat-ui"]',
-						) as HTMLElement;
-						if (nextSection) {
-							nextSection.scrollIntoView({ behavior: "smooth" });
-						}
-					}, 100);
-				}
-			} else if (direction === "up") {
-				if (currentStep > 0) {
-					// 이전 스텝으로
-					const prevStep = currentStep - 1;
-					setCurrentStep(prevStep);
-					onStepChange?.(prevStep, false);
-				} else {
-					// 첫 번째 스텝에서 위로 스크롤하면 이전 섹션으로
-					onSectionExit?.();
-					setTimeout(() => {
-						const prevSection = document.querySelector(
-							'[data-section="hero"]',
-						) as HTMLElement;
-						if (prevSection) {
-							prevSection.scrollIntoView({ behavior: "smooth" });
-						}
-					}, 100);
-				}
-			}
-
-			// 스크롤 완료 후 플래그 해제
-			setTimeout(() => {
-				setIsScrolling(false);
-			}, 300);
-		},
-		[isInView, isScrolling, currentStep, onStepChange, onSectionExit],
-	);
-
-	// 이벤트 리스너 등록
-	useEffect(() => {
-		if (isInView) {
-			window.addEventListener("wheel", handleScroll, { passive: false });
-			// 섹션 활성화 알림
-			onStepChange?.(currentStep, currentStep === aiSteps.length - 1);
-		} else {
-			window.removeEventListener("wheel", handleScroll);
-		}
-
-		return () => {
-			window.removeEventListener("wheel", handleScroll);
-		};
-	}, [isInView, handleScroll, currentStep, onStepChange]);
-
-	// 폰 애니메이션 완료 처리
-	useEffect(() => {
-		if (isInView && !phoneAnimationComplete) {
-			const timer = setTimeout(() => {
-				setPhoneAnimationComplete(true);
-			}, 1000);
-			return () => clearTimeout(timer);
-		}
-	}, [isInView, phoneAnimationComplete]);
-
-	// 섹션이 뷰에서 벗어나면 상태 리셋
-	useEffect(() => {
-		if (!isInView) {
-			setCurrentStep(0);
-			setPhoneAnimationComplete(false);
-			onSectionExit?.();
-		}
-	}, [isInView, onSectionExit]);
+	// 스크롤 제어 훅 사용
+	const { sectionRef, currentStep, isInView, isScrolling } =
+		useStepScrollControl({
+			totalSteps: aiSteps.length,
+			onStepChange: (step, isLastStep) => {
+				console.log("Step changed:", step, "Is last:", isLastStep); // 디버깅
+				onStepChange?.(step, isLastStep);
+			},
+			onSectionExit,
+			scrollThreshold: 30, // 임계값을 낮춰서 반응성 개선
+		});
 
 	const currentStepData = aiSteps[currentStep];
 
+	// 디버깅용 로그
+	useEffect(() => {
+		console.log("Current step:", currentStep);
+		console.log("Is in view:", isInView);
+		console.log("Scrolling:", isScrolling);
+		console.log("Body Overflow:", document.body.style.overflow || "auto");
+	}, [currentStep, isInView, isScrolling]);
+
 	return (
-		<section ref={sectionRef} className="relative h-screen">
-			{/* Sticky Container */}
-			<div className="sticky top-0 h-screen overflow-hidden">
-				<div className="container mx-auto flex h-full items-center px-4 md:px-8">
-					<div className="flex flex-col h-screen lg:grid w-full items-center lg:grid-cols-2">
-						{/* 왼쪽: iPhone 목업 */}
-						<div className="pt-16 md:pt-0 h-[70%] w-full">
-							<motion.div
-								className="relative h-full w-full"
-								animate={{
-									scale: isInView ? 1 : 0.8,
-									opacity: isInView ? 1 : 0,
-								}}
-								transition={{
-									type: "spring",
-									stiffness: 100,
-									damping: 20,
-									mass: 0.8,
-								}}
-							>
-								<motion.div
-									key={currentStepData?.image}
-									initial={{
-										scale: 0.95,
-										opacity: 0,
-									}}
-									animate={{
-										scale: 1,
-										opacity: 1,
-									}}
-									transition={{
-										duration: 0.5,
-										ease: "easeOut",
-									}}
-									className="relative flex flex-col items-center justify-start w-full h-full"
-								>
-									<Iphone15Pro
-										width={"100%"}
-										height={"100%"}
-										className=" dark drop-shadow-2xl"
-										src={currentStepData?.image}
-										title={`${currentStepData?.title} 시뮬레이션`}
-									/>
-								</motion.div>
+		<section
+			ref={sectionRef}
+			className="relative h-screen"
+			style={{
+				scrollSnapAlign: "start",
+				scrollSnapStop: "always",
+			}}
+		>
+			{/* 디버깅 정보 표시 */}
+			{/* {process.env.NODE_ENV === "development" && (
+				<div className="fixed top-4 left-4 z-50 bg-black/80 text-white p-2 rounded text-xs">
+					<div>
+						Step: {currentStep}/{aiSteps.length - 1}
+					</div>
+					<div>InView: {isInView ? "Yes" : "No"}</div>
+					<div>Complete: {isComplete ? "Yes" : "No"}</div>
+					<div>Scrolling: {isScrolling ? "Yes" : "No"}</div>
+					<div>Body Overflow: {document.body.style.overflow || "auto"}</div>
+				</div>
+			)} */}
 
-								{/* 추가 시각적 효과 */}
-								<motion.div
-									className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-rebe-purple-200/20 via-rebe-blue-200/20 to-rebe-pink-200/20 blur-xl"
-									animate={{
-										opacity: isInView ? 0.5 : 0,
-										scale: isInView ? 1.1 : 0.8,
-									}}
-									transition={{
-										duration: 0.8,
-										ease: "easeOut",
-									}}
-								/>
-							</motion.div>
-						</div>
-
-						{/* 오른쪽: 설명 텍스트 */}
+			{/* 고정 컨테이너 */}
+			<div className="container mx-auto flex h-full items-center px-4 md:px-8">
+				<div className="flex flex-col h-screen w-full items-center sm:grid sm:gap-8 sm:grid-cols-2 lg:grid-cols-2 px-4 md:px-12">
+					{/* 왼쪽: iPhone 목업 */}
+					<div className="h-[60%] w-full">
 						<motion.div
-							className="md:flex h-[40%] flex-col justify-start"
+							className="relative h-full w-full"
+							initial={{ scale: 0.8, opacity: 0 }}
 							animate={{
-								x: isInView ? 0 : 50,
+								scale: isInView ? 1 : 0.8,
 								opacity: isInView ? 1 : 0,
 							}}
 							transition={{
-								duration: 0.8,
-								ease: "easeOut",
+								type: "spring",
+								stiffness: 100,
+								damping: 20,
+								mass: 0.8,
 							}}
 						>
-							<div className="space-y-1 md:space-y-6 mt-4 lg:mt-16">
-								{/* 카테고리 배지 */}
-								<motion.div
-									className={cn(
-										"inline-flex items-center rounded-full px-2 py-1 text-lg  md:px-4 md:py-2 md:text-2xl tracking-wide font-bold",
-										"bg-gradient-to-r transition-all duration-500",
-										currentStepData?.phase === "After"
-											? "bg-rebe-slate-800 text-rebe-slate-50"
-											: "border border-rebe-slate-800 text-rebe-slate-800",
-									)}
-									key={`${currentStepData?.phase}-${currentStep}`}
-									initial={{ scale: 0.8, opacity: 0 }}
-									animate={{ scale: 1, opacity: 1 }}
-									transition={{ duration: 0.4, ease: "easeOut" }}
-								>
-									{currentStepData?.phase}
-								</motion.div>
-
-								{/* 제목 */}
-								<BlurFade key={currentStepData?.title}>
-									<motion.p
-										className="text-3xl sm:text-3xl font-bold leading-normal tracking-tight text-rebe-slate-800 md:text-6xl lg:text-7xl"
-										initial={{ y: 20, opacity: 0 }}
-										animate={{ y: 0, opacity: 1 }}
-										transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
-									>
-										{currentStepData?.title}
-									</motion.p>
-								</BlurFade>
-
-								{/* 설명 */}
-								<motion.p
-									className="leading-lg text-md md:leading-relaxed tracking-tight text-rebe-gray-700 md:text-2xl"
-									key={currentStepData?.description}
-									initial={{ y: 20, opacity: 0 }}
-									animate={{ y: 0, opacity: 1 }}
-									transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-								>
-									{currentStepData?.description}
-								</motion.p>
-
-								{/* 스크롤 진행률 인디케이터 */}
-								{isInView && (
-									<div className="mt-2 flex items-center space-x-4">
-										<div className="h-3 w-32 bg-rebe-gray-200 rounded-full overflow-hidden">
-											<motion.div
-												className="h-full bg-rebe-slate-800"
-												animate={{
-													width: `${(currentStep / (aiSteps.length - 1)) * 100}%`,
-												}}
-												transition={{
-													duration: 0.3,
-													ease: "easeOut",
-												}}
-											/>
-										</div>
-										<span className="text-sm text-rebe-gray-600">
-											{currentStep + 1} / {aiSteps.length}
-										</span>
-									</div>
-								)}
-
-								{/* 스텝 모드 안내 */}
-								{isInView && (
-									<motion.div
-										className="hidden sm:block flex items-center space-x-2 text-sm text-rebe-gray-500"
-										initial={{ opacity: 0 }}
-										animate={{ opacity: 1 }}
-										transition={{ delay: 0.5 }}
-									>
-										<span>스크롤하여 다음 단계 보기</span>
-										{currentStep === aiSteps.length - 1 && (
-											<span className="text-rebe-purple-600 font-medium">
-												(마지막 단계)
-											</span>
-										)}
-									</motion.div>
-								)}
-							</div>
+							<motion.div
+								key={currentStepData?.image}
+								initial={{
+									scale: 0.95,
+									opacity: 0,
+									y: 20,
+								}}
+								animate={{
+									scale: 1,
+									opacity: 1,
+									y: 0,
+								}}
+								transition={{
+									duration: 0.6,
+									ease: "easeOut",
+								}}
+								className="relative flex flex-col items-center justify-start w-full h-full"
+							>
+								<Iphone15Pro
+									width={"100%"}
+									height={"100%"}
+									className="dark drop-shadow-2xl "
+									src={currentStepData?.image}
+									title={`${currentStepData?.title} 시뮬레이션`}
+								/>
+							</motion.div>
 						</motion.div>
 					</div>
+
+					{/* 오른쪽: 설명 텍스트 */}
+					<motion.div
+						className=" w-full flex h-[30%] lg:h-full flex-col justify-center"
+						initial={{ x: 50, opacity: 0 }}
+						animate={{
+							x: isInView ? 0 : 50,
+							opacity: isInView ? 1 : 0,
+						}}
+						transition={{
+							duration: 0.8,
+							ease: "easeOut",
+						}}
+					>
+						<div className="space-y-4 lg:space-y-6">
+							{/* 카테고리 배지 */}
+							<motion.div
+								className={cn(
+									"inline-flex items-center rounded-full px-3 py-2 text-lg md:px-4 md:py-2 md:text-2xl tracking-wide font-bold",
+									"transition-all duration-500",
+									currentStepData?.phase === "After"
+										? "bg-rebe-slate-800 text-rebe-slate-50"
+										: "border border-rebe-slate-800 text-rebe-slate-800",
+								)}
+								key={`${currentStepData?.phase}-${currentStep}`}
+								initial={{ scale: 0.8, opacity: 0 }}
+								animate={{ scale: 1, opacity: 1 }}
+								transition={{ duration: 0.4, ease: "easeOut" }}
+							>
+								{currentStepData?.phase}
+							</motion.div>
+
+							{/* 제목 */}
+							<motion.h2
+								className="text-3xl sm:text-4xl lg:text-6xl xl:text-7xl font-bold leading-tight tracking-tight text-rebe-slate-800"
+								key={currentStepData?.title}
+								initial={{ y: 20, opacity: 0 }}
+								animate={{ y: 0, opacity: 1 }}
+								transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
+							>
+								{currentStepData?.title}
+							</motion.h2>
+
+							{/* 설명 */}
+							<motion.p
+								className="text-md md:text-lg lg:text-xl xl:text-2xl leading-relaxed tracking-tight text-rebe-gray-700"
+								key={currentStepData?.description}
+								initial={{ y: 20, opacity: 0 }}
+								animate={{ y: 0, opacity: 1 }}
+								transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+							>
+								{currentStepData?.description}
+							</motion.p>
+
+							{/* 스크롤 진행률 인디케이터 */}
+							{isInView && (
+								<motion.div
+									className="flex items-center space-x-4"
+									initial={{ y: 20, opacity: 0 }}
+									animate={{ y: 0, opacity: 1 }}
+									transition={{ duration: 0.4, ease: "easeOut", delay: 0.3 }}
+								>
+									<div className="h-3 w-32 bg-rebe-gray-200 rounded-full overflow-hidden">
+										<motion.div
+											className="h-full bg-rebe-slate-800"
+											animate={{
+												width: `${(currentStep / (aiSteps.length - 1)) * 100}%`,
+											}}
+											transition={{
+												duration: 0.3,
+												ease: "easeOut",
+											}}
+										/>
+									</div>
+									<span className="text-sm text-rebe-gray-600">
+										{currentStep + 1} / {aiSteps.length}
+									</span>
+								</motion.div>
+							)}
+						</div>
+					</motion.div>
 				</div>
 			</div>
 		</section>

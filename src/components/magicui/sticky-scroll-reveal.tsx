@@ -225,16 +225,16 @@ export const StickyScroll = ({
 						backgroundColor:
 							backgroundColors[activeCard % backgroundColors.length],
 					}}
-					className="relative flex justify-center space-x-10 rounded-md p-10"
+					className="relative flex justify-center w-full rounded-md p-10"
 					ref={ref}
 				>
 					{/* 왼쪽 텍스트 섹션 - 애니메이션 개선 */}
-					<div className="div relative flex items-center px-4 w-1/2">
+					<div className="div relative flex items-center pl-24 w-1/2">
 						<div className="relative w-full">
 							{content.map((item, index) => (
 								<motion.div
 									key={`${item.title}-${index}`}
-									className="absolute inset-0 flex flex-col justify-center"
+									className="absolute inset-0 flex flex-col justify-center w-full"
 									initial={{
 										opacity: 0,
 										y: 50,
@@ -254,7 +254,7 @@ export const StickyScroll = ({
 									}}
 								>
 									<motion.h2
-										className="text-4xl leading-tight font-semibold text-rebe-slate-800 mb-6"
+										className="text-4xl md:text-5xl leading-tight font-normal text-rebe-slate-800 mb-6"
 										initial={{ y: 30, opacity: 0 }}
 										animate={{
 											y: activeCard === index ? 0 : 30,
@@ -321,7 +321,7 @@ export const StickyScroll = ({
 					</div>
 
 					{/* 오른쪽 콘텐츠 섹션 - 동적 사이즈 적용 */}
-					<div className="hidden md:flex w-1/2 items-center justify-center">
+					<div className="hidden md:flex items-center justify-center pr-24">
 						<motion.div
 							style={{
 								background: backgroundGradient,

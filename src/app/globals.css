@@ -423,9 +423,28 @@
 	}
 }
 
-/* 부드러운 스크롤 비활성화 (JavaScript로 제어) */
+/* Smooth scrolling enhancement */
 html {
-	scroll-behavior: auto;
+	scroll-behavior: smooth;
+}
+
+/* Custom scroll snap styles */
+.scroll-container {
+	scroll-snap-type: y mandatory;
+	scroll-behavior: smooth;
+	overflow-y: auto;
+	height: 100vh;
+}
+
+.scroll-section {
+	scroll-snap-align: start;
+	scroll-snap-stop: always;
+	min-height: 100vh;
+}
+
+/* Prevent scroll during step transitions */
+.no-scroll {
+	overflow: hidden;
 }
 
 /* 스크롤바 숨기기 (선택사항) */
@@ -446,4 +465,20 @@ body {
 .scrolling {
 	user-select: none;
 	pointer-events: none;
+}
+
+/* AI Showcase 섹션이 활성화될 때 스크롤 방지 */
+.ai-section-active {
+	overflow: hidden !important;
+	height: 100vh;
+	position: fixed;
+	width: 100%;
+}
+
+/* 스크롤 방지 클래스 */
+.no-scroll {
+	overflow: hidden !important;
+	height: 100vh;
+	position: fixed;
+	width: 100%;
 }

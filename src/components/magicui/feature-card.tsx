@@ -8,6 +8,7 @@ interface FeatureCardProps {
 	icon: React.ElementType;
 	title: string;
 	description: string;
+	subDescription: string;
 	iconColor?: string;
 	delay?: number;
 	className?: string;
@@ -17,6 +18,7 @@ export function FeatureCard({
 	icon: Icon,
 	title,
 	description,
+	subDescription,
 	iconColor = "text-rebe-purple-400",
 	delay = 0,
 	className,
@@ -25,7 +27,7 @@ export function FeatureCard({
 		<BlurFade delay={delay} inView>
 			<div
 				className={cn(
-					"group relative h-full overflow-hidden rounded-2xl border border-rebe-slate-400/60 bg-transparent p-8 transition-all duration-300 hover:border-rebe-purple-400/60 hover:bg-rebe-slate-50/5",
+					"group relative h-full overflow-hidden rounded-2xl border border-rebe-slate-400/60 bg-transparent  p-6 md:p-8 transition-all duration-300 hover:border-rebe-purple-400/60 hover:bg-rebe-slate-50/5",
 					className,
 				)}
 			>
@@ -37,7 +39,7 @@ export function FeatureCard({
 
 				<div className="relative z-10 flex h-full flex-col">
 					{/* 아이콘 */}
-					<div className="mb-4">
+					<div className="mb-2 md:mb-4">
 						<Icon
 							className={cn(
 								"size-8 md:size-14 transition-colors duration-300",
@@ -49,17 +51,22 @@ export function FeatureCard({
 					</div>
 
 					{/* 제목 */}
-					<h4 className="mb-4 text-2xl font-bold text-rebe-slate-800 transition-colors duration-300 group-hover:text-rebe-purple-700 md:text-3xl">
+					<h4 className="mb-2 md:mb-4 text-[1.6rem] font-semibold text-rebe-slate-800 transition-colors duration-300 group-hover:text-rebe-purple-700 md:text-3xl">
 						{title}
 					</h4>
 
 					{/* 설명 */}
-					<p className="flex-grow text- leading-relaxed text-rebe-slate-600 transition-colors duration-300 group-hover:text-rebe-slate-700 md:text-lg">
+					<p className=" md:hidden  text-rebe-slate-600 transition-colors duration-300 group-hover:text-rebe-slate-700 md:text-base">
+						{subDescription}
+					</p>
+
+					{/* 상세 설명 */}
+					<p className="hidden md:block leading-relaxed text-rebe-slate-600 transition-colors duration-300 group-hover:text-rebe-slate-700 md:text-lg">
 						{description}
 					</p>
 
 					{/* Read More 링크 */}
-					<div className="mt-6 pt-4">
+					<div className="hidden md:block mt-6 pt-4">
 						<div className="group/link flex items-center gap-2 text-sm font-medium text-rebe-slate-500 transition-colors duration-300 hover:text-rebe-purple-600">
 							<span className="border-b border-rebe-slate-500 pb-0.5 transition-colors duration-300 group-hover/link:border-rebe-purple-400">
 								READ MORE
